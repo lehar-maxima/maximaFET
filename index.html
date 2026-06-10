@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maxima — Field Events Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css" />
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 3L25 22H3L14 3Z" fill="#064ADC" opacity=".15"/>
+        <path d="M14 7L22 21H6L14 7Z" fill="#064ADC" opacity=".4"/>
+        <path d="M14 12L19 21H9L14 12Z" fill="#064ADC"/>
+      </svg>
+      <div>
+        <div class="brand-title"><span class="pulse"></span>Field events tracker</div>
+        <div class="brand-sub">Maxima competitive intelligence</div>
+      </div>
+    </div>
+    <button class="scan-btn" id="runBtn" onclick="runScan()">
+      <i class="ti ti-radar"></i> Run weekly scan
+    </button>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filterbar" id="filterbar" style="display:none;">
+    <div class="filter-group">
+      <span class="filter-label">Rival</span>
+      <div class="chips" id="rivalChips">
+        <button class="chip on" onclick="setFilter('rival','all',this)">All</button>
+        <button class="chip" onclick="setFilter('rival','rillet',this)">Rillet</button>
+        <button class="chip" onclick="setFilter('rival','numeric',this)">Numeric</button>
+        <button class="chip" onclick="setFilter('rival','campfire',this)">Campfire</button>
+        <button class="chip" onclick="setFilter('rival','klarity',this)">Klarity</button>
+        <button class="chip" onclick="setFilter('rival','floqast',this)">FloQast</button>
+        <button class="chip" onclick="setFilter('rival','blackline',this)">BlackLine</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <span class="filter-label">Format</span>
+        <div class="chips">
+          <button class="chip on" onclick="setFilter('format','all',this)">All</button>
+          <button class="chip" onclick="setFilter('format','inperson',this)"><i class="ti ti-map-pin"></i> In person</button>
+          <button class="chip" onclick="setFilter('format','virtual',this)"><i class="ti ti-video"></i> Virtual</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Sort</span>
+        <div class="chips">
+          <button class="chip on" onclick="setSort('recent',this)">Most recent</button>
+          <button class="chip" onclick="setSort('relevance',this)">Most relevant</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary row -->
+  <div id="summaryRow" class="summary-row" style="display:none;">
+    <div class="scard"><div class="n" id="evtCount">0</div><div class="l">events found</div></div>
+    <div class="scard"><div class="n" id="inPersonCount">0</div><div class="l">in person</div></div>
+    <div class="scard"><div class="n" id="rivalCount">0</div><div class="l">rivals active</div></div>
+    <div class="scard hot"><div class="n" id="hotInsight" style="font-size:12px;line-height:1.4;padding-top:2px;">—</div><div class="l">top signal</div></div>
+  </div>
+
+  <div class="area" id="area">
+    <div class="empty">
+      <i class="ti ti-calendar-search"></i>
+      <strong>Ready to scan</strong>
+      <span>Pulls live field events, dinners, roundtables, and conferences from all six competitors. Real sources only, nothing fabricated.</span>
+    </div>
+  </div>
+
+  <p class="footer-note" id="footNote" style="display:none;"></p>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
