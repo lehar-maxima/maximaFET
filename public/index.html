@@ -60,6 +60,14 @@
           </div>
         </div>
         <div class="filter-group">
+          <span class="filter-label">Location</span>
+          <div class="chips">
+            <button class="chip on" onclick="setFilter('location','all',this)">All</button>
+            <button class="chip" onclick="setFilter('location','usa',this)"><i class="ti ti-map"></i> USA</button>
+            <button class="chip" onclick="setFilter('location','international',this)"><i class="ti ti-world"></i> International</button>
+          </div>
+        </div>
+        <div class="filter-group">
           <span class="filter-label">Sort</span>
           <div class="chips">
             <button class="chip on" onclick="setSort('all',this)">All</button>
