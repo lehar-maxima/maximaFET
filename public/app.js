@@ -1,6 +1,6 @@
 // ── State ──────────────────────────────────────────────────────────────────
 let filters = { rival: 'all', format: 'all' };
-let sortMode = 'recent';
+let sortMode = 'all';
 let allEvents = [];
 let observations = [];
 let topSignal = '';
@@ -117,8 +117,9 @@ function renderAlerts() {
 // ── RSS tab ────────────────────────────────────────────────────────────────
 function renderRSS() {
   const el = document.getElementById('rssList');
-  const feedyBase = 'https://feedly.com/i/subscription/feed/';
-  el.innerHTML = COMPETITORS.map(c => `
+  el.innerHTML = COMPETITORS.map(c => {
+    const notionRssUrl = `https://www.notion.so/new?importSource=rss&importUrl=${encodeURIComponent(c.rss)}`;
+    return `
     <div class="rival-section">
       <div class="rival-section-header">
         <span class="rbadge rb-${c.id}">${c.label}</span>
@@ -130,7 +131,7 @@ function renderRSS() {
         </div>
         <div class="source-row-right">
           <button class="copy-btn" onclick="copyText('${c.rss}', this)"><i class="ti ti-copy" style="font-size:12px;"></i> Copy URL</button>
-          <a class="open-btn" href="${feedyBase}${encodeURIComponent(c.rss)}" target="_blank" rel="noopener"><i class="ti ti-rss"></i> Add to Feedly</a>
+          <a class="open-btn" href="${notionRssUrl}" target="_blank" rel="noopener"><i class="ti ti-brand-notion"></i> Copy for Notion</a>
         </div>
       </div>
       <div class="source-row">
@@ -143,8 +144,8 @@ function renderRSS() {
           <a class="open-btn" href="${c.eventsPage}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> Visit page</a>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function copyText(text, btn) {
@@ -214,7 +215,8 @@ function render() {
   if (filters.format === 'virtual') evts = evts.filter(e => isVirtual(e));
   if (filters.format === 'inperson') evts = evts.filter(e => !isVirtual(e));
   if (sortMode === 'recent') evts.sort((a, b) => parseDate(b.date) - parseDate(a.date));
-  else evts.sort((a, b) => (b.relevance || 5) - (a.relevance || 5));
+  else if (sortMode === 'relevance') evts.sort((a, b) => (b.relevance || 5) - (a.relevance || 5));
+  // 'all' = no sort, show in order returned
 
   if (evts.length === 0 && allEvents.length > 0) {
     area.innerHTML = '<div class="empty"><i class="ti ti-search-off"></i><strong>No events match this filter</strong><span>Try adjusting your filters above.</span></div>';
