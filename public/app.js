@@ -1,5 +1,5 @@
 // ── State ──────────────────────────────────────────────────────────────────
-let filters = { rival: 'all', format: 'all' };
+let filters = { rival: 'all', format: 'all', location: 'all' };
 let sortMode = 'all';
 let allEvents = [];
 let observations = [];
@@ -117,9 +117,7 @@ function renderAlerts() {
 // ── RSS tab ────────────────────────────────────────────────────────────────
 function renderRSS() {
   const el = document.getElementById('rssList');
-  el.innerHTML = COMPETITORS.map(c => {
-    const notionRssUrl = `https://www.notion.so/new?importSource=rss&importUrl=${encodeURIComponent(c.rss)}`;
-    return `
+  el.innerHTML = COMPETITORS.map(c => `
     <div class="rival-section">
       <div class="rival-section-header">
         <span class="rbadge rb-${c.id}">${c.label}</span>
@@ -131,7 +129,7 @@ function renderRSS() {
         </div>
         <div class="source-row-right">
           <button class="copy-btn" onclick="copyText('${c.rss}', this)"><i class="ti ti-copy" style="font-size:12px;"></i> Copy URL</button>
-          <a class="open-btn" href="${notionRssUrl}" target="_blank" rel="noopener"><i class="ti ti-brand-notion"></i> Copy for Notion</a>
+          <a class="open-btn" href="${c.rss}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> Visit feed</a>
         </div>
       </div>
       <div class="source-row">
@@ -144,8 +142,8 @@ function renderRSS() {
           <a class="open-btn" href="${c.eventsPage}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i> Visit page</a>
         </div>
       </div>
-    </div>`;
-  }).join('');
+    </div>`
+  ).join('');
 }
 
 function copyText(text, btn) {
@@ -202,6 +200,14 @@ function isVirtual(e) {
   return e.location && e.location.toLowerCase().includes('virtual');
 }
 
+const US_STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','USA','U.S.','United States','New York','San Francisco','Los Angeles','Chicago','Boston','Austin','Seattle','Denver','Atlanta','Miami','Dallas','Houston','Nashville','Philadelphia','Washington'];
+
+function isUSA(e) {
+  if (!e.location) return false;
+  const loc = e.location;
+  return US_STATES.some(s => loc.includes(s));
+}
+
 function parseDate(d) {
   if (!d) return new Date(0);
   const p = new Date(d);
@@ -214,6 +220,8 @@ function render() {
   if (filters.rival !== 'all') evts = evts.filter(e => e.rival === filters.rival);
   if (filters.format === 'virtual') evts = evts.filter(e => isVirtual(e));
   if (filters.format === 'inperson') evts = evts.filter(e => !isVirtual(e));
+  if (filters.location === 'usa') evts = evts.filter(e => isUSA(e));
+  if (filters.location === 'international') evts = evts.filter(e => !isUSA(e) && !isVirtual(e));
   if (sortMode === 'recent') evts.sort((a, b) => parseDate(b.date) - parseDate(a.date));
   else if (sortMode === 'relevance') evts.sort((a, b) => (b.relevance || 5) - (a.relevance || 5));
   // 'all' = no sort, show in order returned
