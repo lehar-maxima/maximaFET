@@ -1,0 +1,13 @@
+{
+  "name": "maxima-field-events-tracker",
+  "version": "1.0.0",
+  "description": "Maxima competitive intelligence tracker for field marketing events",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
